@@ -1,0 +1,20 @@
+[
+    {
+        "id": "1",
+        "title": "Video Alam yang Indah",
+        "thumbnail": "https://via.placeholder.com/300x200/87CEEB/000000?Text=Nature",
+        "url": "https://www.youtube.com/embed/your_nature_video_id"
+    },
+    {
+        "id": "2",
+        "title": "Tutorial Membuat Kue Lezat",
+        "thumbnail": "https://via.placeholder.com/300x200/F08080/FFFFFF?Text=Baking",
+        "url": "https://www.youtube.com/embed/your_baking_tutorial_id"
+    },
+    {
+        "id": "3",
+        "title": "Tips dan Trik Coding JavaScript",
+        "thumbnail": "https://via.placeholder.com/300x200/FFD700/000000?Text=JavaScript",
+        "url": "https://www.youtube.com/embed/your_javascript_tips_id"
+    }
+]
