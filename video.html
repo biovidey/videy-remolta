@@ -178,6 +178,7 @@ body {
 </div>
 
 <script>
+    // Script untuk video
     const urlParams = new URLSearchParams(window.location.search);
     const videoId = urlParams.get('id');
     const videoFrame = document.getElementById('videoFrame');
@@ -210,6 +211,41 @@ body {
             .catch(error => console.error('Gagal memuat data video:', error));
     } else {
         videoDetailsDiv.innerHTML = '<p>ID video tidak valid.</p>';
+    }
+
+    // Script untuk lazy load dan carousel sponsor
+    const observer = lozad();
+    observer.observe();
+
+    const carouselSponsor = $('#carouselExampleSlideshow');
+    const totalSponsors = $('.carousel-item iframe').length;
+    const sponsorsVisited = Array(totalSponsors).fill(false);
+    let allVisited = false;
+    let refreshTimeout;
+
+    carouselSponsor.on('slide.bs.carousel', function (e) {
+        const activeItem = $(e.relatedTarget);
+        const activeIndex = $('.carousel-item').index(activeItem);
+
+        sponsorsVisited[activeIndex] = true;
+        allVisited = sponsorsVisited.every(visited => visited);
+
+        clearTimeout(refreshTimeout);
+
+        if (allVisited) {
+            if (activeIndex === totalSponsors - 1) {
+                refreshTimeout = setTimeout(refreshSponsors, 30000);
+            }
+        }
+    });
+
+    function refreshSponsors() {
+        $('.carousel-item.active iframe').each(function() {
+            this.src = this.src;
+            console.log('Refreshed iframe: ' + this.id + ' at ' + new Date().toLocaleTimeString());
+        });
+        sponsorsVisited.fill(false);
+        allVisited = false;
     }
 </script>
 </body>
