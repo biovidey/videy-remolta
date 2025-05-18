@@ -6,7 +6,6 @@
     <title>Video Player</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-     /* Di dalam tag <style> atau file CSS terpisah */
 body {
     font-family: sans-serif;
     margin: 10px; /* Kurangi margin untuk layar kecil */
@@ -25,7 +24,7 @@ body {
 
 .video-player {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 9; /* Ini akan diubah oleh JavaScript */
     background-color: #000;
     border-radius: 5px;
     overflow: hidden; /* Untuk memastikan iframe tidak keluar batas */
@@ -171,31 +170,47 @@ body {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoId = urlParams.get('id');
-        const videoFrame = document.getElementById('videoFrame');
-        const videoDetailsDiv = document.getElementById('videoDetails');
+    <div class="video-container">
+    <div class="video-player">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div id="videoDetails"></div>
+</div>
 
-        if (videoId) {
-            fetch('data/videos.json')
-                .then(response => response.json())
-                .then(videos => {
-                    const video = videos.find(v => v.id === videoId);
-                    if (video) {
-                        document.title = video.title;
-                        videoFrame.src = video.url;
-                        videoDetailsDiv.innerHTML = `
-                            <h2>${video.title}</h2>
-                        `;
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get('id');
+    const videoFrame = document.getElementById('videoFrame');
+    const videoPlayer = document.querySelector('.video-player'); // Dapatkan elemen .video-player
+    const videoDetailsDiv = document.getElementById('videoDetails');
+
+    if (videoId) {
+        fetch('data/videos.json')
+            .then(response => response.json())
+            .then(videos => {
+                const video = videos.find(v => v.id === videoId);
+                if (video) {
+                    document.title = video.title;
+                    videoFrame.src = video.url;
+
+                    // Atur aspect-ratio di sini, setelah data video ditemukan
+                    if (video.aspectRatio) {
+                        videoPlayer.style.aspectRatio = video.aspectRatio;
                     } else {
-                        videoDetailsDiv.innerHTML = '<p>Video tidak ditemukan.</p>';
+                        videoPlayer.style.aspectRatio = '16 / 9'; // Atur rasio default jika tidak ada data
                     }
-                })
-                .catch(error => console.error('Gagal memuat data video:', error));
-        } else {
-            videoDetailsDiv.innerHTML = '<p>ID video tidak valid.</p>';
-        }
-    </script>
+
+                    videoDetailsDiv.innerHTML = `
+                        <h2>${video.title}</h2>
+                    `;
+                } else {
+                    videoDetailsDiv.innerHTML = '<p>Video tidak ditemukan.</p>';
+                }
+            })
+            .catch(error => console.error('Gagal memuat data video:', error));
+    } else {
+        videoDetailsDiv.innerHTML = '<p>ID video tidak valid.</p>';
+    }
+</script>
 </body>
 </html>
